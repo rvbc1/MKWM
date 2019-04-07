@@ -57,7 +57,10 @@ DMA_HandleTypeDef hdma_usart3_tx;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 uint8_t Received[5];
-Servo *servo1;
+Servo *servo_1;
+Servo *servo_2;
+Servo *servo_3;
+Servo *servo_4;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,9 +69,7 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
-static void MX_USART3_UART_Init(void);
-
-
+static void MX_USART3_UART_Init(void);                                    
                                 
 
 /* USER CODE BEGIN PFP */
@@ -81,7 +82,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 
 	uint16_t data = (Received[0] - 48) * 100 + (Received[1] - 48) * 10 + Received[2] - 48;
-	servo1->setAngle(data);
+	servo_3->setAngle(data);
 	HAL_UART_Receive_DMA(&huart3, Received, 3);
 }
 
@@ -131,7 +132,10 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	servo1 = new Servo(&TIM4->CCR3);
+	servo_1 = new Servo(&TIM4->CCR1);
+	servo_2 = new Servo(&TIM4->CCR2);
+	servo_3 = new Servo(&TIM4->CCR3);
+	servo_4 = new Servo(&TIM4->CCR4);
 	while (1)
 	{
 
@@ -233,8 +237,24 @@ static void MX_TIM4_Init(void)
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 1500;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
   sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    _Error_Handler(__FILE__, __LINE__);
+  }
+
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
