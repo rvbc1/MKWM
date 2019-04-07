@@ -135,27 +135,6 @@ int main(void)
 	while (1)
 	{
 
-			//  for(int i = 0; i < 90; i++){
-			//  HAL_Delay(1000);
-			 // HAL_UART_Transmit(&huart3, (uint8_t*)buffer, sprintf(buffer, "%d \n ", 10), 500);
-			 // servo1->setAngle(0);
-			//  HAL_Delay(1000);
-			 			 // HAL_UART_Transmit(&huart3, (uint8_t*)buffer, sprintf(buffer, "%d \n ", 10), 500);
-			// 			  servo1->setAngle(180);
-			//  }
-		//
-		//	  for(int i = 6; i < 25; i++){
-		//	  HAL_Delay(500);
-			 // HAL_UART_Transmit(&huart3, (uint8_t*)buffer, sprintf(buffer, "%s \n ", typeid(TIM4.CCR3).name()), 500);
-
-
-			  //	  TIM4->CCR3 = 3000 - i * 100;
-		//	  }
-		//	  HAL_Delay(1000);
-		//	  TIM4->CCR3 = 600;
-		//	  HAL_Delay(1000);
-			  //TIM4->CCR3 = 2500;
-
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
