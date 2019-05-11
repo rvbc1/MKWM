@@ -42,7 +42,11 @@
 
 /* USER CODE BEGIN Includes */
 
+#include "Robot.h"
 #include "Servo.h"
+#include "string.h"
+#include "UARTPCCOM.h"
+
 
 /* USER CODE END Includes */
 
@@ -51,16 +55,21 @@ TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
+DMA_HandleTypeDef hdma_usart2_rx;
+DMA_HandleTypeDef hdma_usart2_tx;
 DMA_HandleTypeDef hdma_usart3_rx;
 DMA_HandleTypeDef hdma_usart3_tx;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint8_t Received[5];
-Servo *servo_1;
-Servo *servo_2;
-Servo *servo_3;
-Servo *servo_4;
+uint8_t Received[20];
+Robot *robot;
+//Servo *servo_1;
+//Servo *servo_2;
+//Servo *servo_3;
+//Servo *servo_4;
+
+UART_PC_COM *pc;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,14 +85,43 @@ static void MX_USART3_UART_Init(void);
 /* Private function prototypes -----------------------------------------------*/
 extern "C" void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
+void send_string(char* s)
+{
+	HAL_UART_Transmit(&huart2, (uint8_t*)s, strlen(s), 1000);
+}
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 
-	uint16_t data = (Received[0] - 48) * 100 + (Received[1] - 48) * 10 + Received[2] - 48;
-	servo_3->setAngle(data);
-	HAL_UART_Receive_DMA(&huart3, Received, 3);
+//	uint16_t data1 = (Received[0] - 48) * 100 + (Received[1] - 48) * 10 + Received[2] - 48;
+//	uint16_t data2 = (Received[3] - 48) * 100 + (Received[4] - 48) * 10 + Received[5] - 48;
+//	uint16_t data3 = (Received[6] - 48) * 100 + (Received[7] - 48) * 10 + Received[8] - 48;
+//	uint16_t data4 = (Received[9] - 48) * 100 + (Received[10] - 48) * 10 + Received[11] - 48;
+//	servo_1->setAngle(data1);
+//	servo_2->setAngle(data2);
+//	servo_3->setAngle(data3);
+//	servo_4->setAngle(data4);
+
+	if(pc->recieveData()){
+		for(int i = 0; i < 4; i++){
+			robot->servo[i]->setAngle(pc->frameRX.data.servo[i]);
+		}
+//		servo_1->setAngle(pc->frameRX.data.servo[0]);
+//		servo_2->setAngle(pc->frameRX.data.servo[1]);
+//		servo_3->setAngle(pc->frameRX.data.servo[2]);
+//		servo_4->setAngle(pc->frameRX.data.servo[3]);
+	}
+
+//	pc->frameTX.data.servo1 = data1;
+//	pc->frameTX.data.servo2 = data2;
+//	pc->frameTX.data.servo3 = data3;
+//	pc->frameTX.data.servo4 = data4;
+
+
+	HAL_UART_Receive_DMA(pc->getUartHandler(), pc->frameRX.bytes, DATA_FRAME_RX_SIZE);
+
 }
 
 /* USER CODE END PFP */
@@ -126,16 +164,22 @@ int main(void)
   MX_TIM4_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
-	HAL_UART_Receive_DMA(&huart3, Received, 3);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	servo_1 = new Servo(&TIM4->CCR1);
-	servo_2 = new Servo(&TIM4->CCR2);
-	servo_3 = new Servo(&TIM4->CCR3);
-	servo_4 = new Servo(&TIM4->CCR4);
+
+
+	pc = new UART_PC_COM(&huart3);
+	robot = new Robot();
+
+
+
 	while (1)
 	{
 
@@ -206,9 +250,9 @@ static void MX_TIM4_Init(void)
   TIM_OC_InitTypeDef sConfigOC;
 
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 64 -1;
+  htim4.Init.Prescaler = 64 - 1;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 19999;
+  htim4.Init.Period = 20000 - 1;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
@@ -316,6 +360,12 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel3_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
+  /* DMA1_Channel6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+  /* DMA1_Channel7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
 
 }
 
