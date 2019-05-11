@@ -1,4 +1,6 @@
-Robot.cpp:10:6:void Robot::init()	24	static
-Robot.cpp:17:1:Robot::Robot()	16	static
-Robot.cpp:21:1:Robot::~Robot()	16	static
-Robot.cpp:21:1:virtual Robot::~Robot()	16	static
+Robot.cpp:11:6:void Robot::init()	24	static
+Robot.cpp:18:1:Robot::Robot()	16	static
+Robot.cpp:22:1:Robot::~Robot()	16	static
+Robot.cpp:22:1:virtual Robot::~Robot()	16	static
+Robot.cpp:26:6:void Robot::updatedData(dataFrameRX*)	16	static
+Robot.cpp:30:6:void Robot::setServoFromDataBuffer(uint16_t*)	24	static

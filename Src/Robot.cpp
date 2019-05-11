@@ -6,6 +6,7 @@
  */
 
 #include "Robot.h"
+#include "UARTPCCOM.h"
 
 void Robot::init(){
 	servo[0] = new Servo(&TIM4->CCR1);
@@ -20,5 +21,15 @@ Robot::Robot() {
 
 Robot::~Robot() {
 	// TODO Auto-generated destructor stub
+}
+
+void Robot::updatedData(dataFrameRX *dataBuffer){
+	setServoFromDataBuffer(dataBuffer->servo);
+}
+
+void Robot::setServoFromDataBuffer(uint16_t *buffer){
+	for(unsigned int i = 0; i < AMOUNT_OF_SERVO; i++){
+		servo[i]->setAngle(buffer[i]);
+	}
 }
 

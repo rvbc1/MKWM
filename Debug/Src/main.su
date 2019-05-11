@@ -1,10 +1,10 @@
 main.cpp:88:6:void send_string(char*)	16	static
 main.cpp:94:6:void HAL_UART_RxCpltCallback(UART_HandleTypeDef*)	24	static
-main.cpp:138:5:int main()	16	static
-main.cpp:199:6:void SystemClock_Config()	72	static
-main.cpp:245:13:void MX_TIM4_Init()	64	static
-main.cpp:311:13:void MX_USART2_UART_Init()	8	static
-main.cpp:330:13:void MX_USART3_UART_Init()	8	static
-main.cpp:351:13:void MX_DMA_Init()	16	static
-main.cpp:379:13:void MX_GPIO_Init()	40	static
-main.cpp:422:6:void _Error_Handler(char*, int)	16	static
+main.cpp:119:5:int main()	16	static
+main.cpp:180:6:void SystemClock_Config()	72	static
+main.cpp:226:13:void MX_TIM4_Init()	64	static
+main.cpp:292:13:void MX_USART2_UART_Init()	8	static
+main.cpp:311:13:void MX_USART3_UART_Init()	8	static
+main.cpp:332:13:void MX_DMA_Init()	16	static
+main.cpp:360:13:void MX_GPIO_Init()	40	static
+main.cpp:403:6:void _Error_Handler(char*, int)	16	static
