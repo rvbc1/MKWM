@@ -1,0 +1,7 @@
+Servo.cpp:10:1:Servo::Servo(volatile uint32_t*)	16	static
+Servo.cpp:16:6:void Servo::setPulse(uint16_t)	16	static
+Servo.cpp:22:6:void Servo::setAngle(uint8_t)	32	static
+Servo.cpp:29:6:void Servo::setMinAngle(uint8_t)	16	static
+Servo.cpp:33:6:void Servo::setMaxAngle(uint8_t)	16	static
+Servo.cpp:37:1:Servo::~Servo()	16	static
+Servo.cpp:37:1:virtual Servo::~Servo()	16	static

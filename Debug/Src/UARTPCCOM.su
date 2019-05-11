@@ -1,0 +1,7 @@
+UARTPCCOM.cpp:10:6:void UART_PC_COM::init(UART_HandleTypeDef*)	16	static
+UARTPCCOM.cpp:16:1:UART_PC_COM::UART_PC_COM(UART_HandleTypeDef*)	16	static
+UARTPCCOM.cpp:20:1:UART_PC_COM::~UART_PC_COM()	16	static
+UARTPCCOM.cpp:20:1:virtual UART_PC_COM::~UART_PC_COM()	16	static
+UARTPCCOM.cpp:24:6:void UART_PC_COM::sendData()	16	static
+UARTPCCOM.cpp:33:9:uint8_t UART_PC_COM::recieveData()	16	static
+UARTPCCOM.cpp:41:22:UART_HandleTypeDef* UART_PC_COM::getUartHandler()	16	static

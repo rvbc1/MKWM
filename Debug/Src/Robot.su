@@ -1,0 +1,4 @@
+Robot.cpp:10:6:void Robot::init()	24	static
+Robot.cpp:17:1:Robot::Robot()	16	static
+Robot.cpp:21:1:Robot::~Robot()	16	static
+Robot.cpp:21:1:virtual Robot::~Robot()	16	static
