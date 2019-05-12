@@ -62,12 +62,8 @@ DMA_HandleTypeDef hdma_usart3_tx;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint8_t Received[20];
+
 Robot *robot;
-//Servo *servo_1;
-//Servo *servo_2;
-//Servo *servo_3;
-//Servo *servo_4;
 
 UART_PC_COM *pc;
 /* USER CODE END PV */
@@ -85,24 +81,17 @@ static void MX_USART3_UART_Init(void);
 /* Private function prototypes -----------------------------------------------*/
 extern "C" void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
-void send_string(char* s)
-{
-	HAL_UART_Transmit(&huart2, (uint8_t*)s, strlen(s), 1000);
-}
-
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
-	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-
-
-	if(pc->recieveData()){
-		robot->updatedData(pc->getRecievedData());
-	}
-
+//	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 
 	pc->recieveNextData();
 
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	pc->sendData();// zmień stan diody
 }
 
 /* USER CODE END PFP */
@@ -155,9 +144,9 @@ int main(void)
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 
+	robot = new Robot(&TIM4->CCR1, &TIM4->CCR2, &TIM4->CCR3, &TIM4->CCR4);
+	pc = new UART_PC_COM(&huart3, robot);
 
-	pc = new UART_PC_COM(&huart3);
-	robot = new Robot();
 
 
 

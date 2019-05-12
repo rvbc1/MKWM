@@ -12,7 +12,7 @@
 #include "Robot.h"
 
 //#define AMOUNTS_OF_SERVO 4
-#define DATA_FRAME_TX_SIZE 8
+#define DATA_FRAME_TX_SIZE 10
 #define DATA_FRAME_RX_SIZE 10
 
 #define START_CODE 0x40
@@ -21,7 +21,6 @@
 
 struct dataFrameRX{
 	uint8_t start_code;
-	//uint16_t *servo;
 	uint16_t servo[Robot::AMOUNT_OF_SERVO];
 	uint8_t end_code;
 } __attribute__ ((__packed__));
@@ -31,7 +30,9 @@ class UART_PC_COM {
 
 private:
 	struct dataFrameTX{
+		uint8_t start_code;
 		uint16_t servo[Robot::AMOUNT_OF_SERVO];
+		uint8_t end_code;
 	} __attribute__ ((__packed__));
 
 
@@ -46,15 +47,16 @@ private:
 	}frameTX;
 
 
-	uint8_t Received[20];
-
-
 	UART_HandleTypeDef * uart_handler;
 
-	void init(UART_HandleTypeDef *uart_handler, unsigned int amount_of_servo);
+	Robot *robot;
+
+	void init(UART_HandleTypeDef *uart_handler, Robot *robot);
 public:
 
-	UART_PC_COM(UART_HandleTypeDef *uart_handler);
+	uint8_t bytes[DATA_FRAME_RX_SIZE];
+
+	UART_PC_COM(UART_HandleTypeDef *uart_handler, Robot *robot);
 	virtual ~UART_PC_COM();
 
 	void sendData();
