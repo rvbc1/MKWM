@@ -68,7 +68,6 @@ Robot *robot = NULL;
 
 UART_PC_COM *pc = NULL;
 
-char buffer [50];
 
 /* USER CODE END PV */
 
@@ -151,22 +150,6 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
 
-
-	//speed_register = &htim2.Instance->ARR;
-	//*speed_register = 5000;
-	//peroid_register = &TIM2->CCMR2;
-
-
-
-	//	  TIM2->CR1 &= ~TIM_CR1_ARPE;
-	//	  TIM2->CR1 |= TIM_AUTORELOAD_PRELOAD_DISABLE;
-	//TIM2->CR1 &= ~TIM_OPMODE_SINGLE;
-
-
-	//TIM2->CNT = 100;
-
-	//HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -174,10 +157,6 @@ int main(void)
 
 	robot = new Robot(&TIM4->CCR1, &TIM4->CCR2, &TIM4->CCR3, &TIM4->CCR4, &htim2);
 	pc = new UART_PC_COM(&huart3, robot);
-
-
-
-
 
 	while (1){
 
