@@ -18,10 +18,15 @@
 #define START_CODE 0x40
 #define END_CODE 0x80
 
-
 struct dataFrameRX{
 	uint8_t start_code;
-	uint16_t servo[Robot::AMOUNT_OF_SERVO];
+	servoAngleData servo;
+	uint8_t end_code;
+} __attribute__ ((__packed__));
+
+struct dataFrameTX{
+	uint8_t start_code;
+	servoAngleData servo;
 	uint8_t end_code;
 } __attribute__ ((__packed__));
 
@@ -29,13 +34,6 @@ class UART_PC_COM {
 
 
 private:
-	struct dataFrameTX{
-		uint8_t start_code;
-		uint16_t servo[Robot::AMOUNT_OF_SERVO];
-		uint8_t end_code;
-	} __attribute__ ((__packed__));
-
-
 	union{
 		dataFrameRX data;
 		uint8_t bytes[DATA_FRAME_RX_SIZE];
@@ -46,10 +44,19 @@ private:
 		uint8_t bytes[DATA_FRAME_TX_SIZE];
 	}frameTX;
 
+	uint8_t is_sending_data;
+	uint8_t is_updating_data;
+
 
 	UART_HandleTypeDef * uart_handler;
 
 	Robot *robot;
+
+	void goodDataLoad();
+	void badDataLoad();
+
+	void initFrameTX();
+	void updateFrameTX();
 
 	void init(UART_HandleTypeDef *uart_handler, Robot *robot);
 public:
@@ -59,9 +66,15 @@ public:
 	UART_PC_COM(UART_HandleTypeDef *uart_handler, Robot *robot);
 	virtual ~UART_PC_COM();
 
+	void startSendingData();
+	void stopSendingData();
+
+	void startUpdatingData();
+	void stopUpdatingData();
+
 	void sendData();
 	void recieveNextData();
-	uint8_t recieveData();
+	uint8_t isRecieveDataCorrect();
 	dataFrameRX *getRecievedData();
 
 	UART_HandleTypeDef * getUartHandler();

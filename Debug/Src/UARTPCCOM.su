@@ -1,9 +1,17 @@
 UARTPCCOM.cpp:10:6:void UART_PC_COM::init(UART_HandleTypeDef*, Robot*)	24	static
-UARTPCCOM.cpp:18:1:UART_PC_COM::UART_PC_COM(UART_HandleTypeDef*, Robot*)	24	static
-UARTPCCOM.cpp:22:1:UART_PC_COM::~UART_PC_COM()	16	static
-UARTPCCOM.cpp:22:1:virtual UART_PC_COM::~UART_PC_COM()	16	static
-UARTPCCOM.cpp:26:6:void UART_PC_COM::sendData()	16	static
-UARTPCCOM.cpp:35:6:void UART_PC_COM::recieveNextData()	32	static
-UARTPCCOM.cpp:55:9:uint8_t UART_PC_COM::recieveData()	16	static
-UARTPCCOM.cpp:63:15:dataFrameRX* UART_PC_COM::getRecievedData()	16	static
-UARTPCCOM.cpp:67:22:UART_HandleTypeDef* UART_PC_COM::getUartHandler()	16	static
+UARTPCCOM.cpp:23:1:UART_PC_COM::UART_PC_COM(UART_HandleTypeDef*, Robot*)	24	static
+UARTPCCOM.cpp:27:1:UART_PC_COM::~UART_PC_COM()	16	static
+UARTPCCOM.cpp:27:1:virtual UART_PC_COM::~UART_PC_COM()	16	static
+UARTPCCOM.cpp:31:6:void UART_PC_COM::sendData()	16	static
+UARTPCCOM.cpp:36:6:void UART_PC_COM::recieveNextData()	24	static
+UARTPCCOM.cpp:56:6:void UART_PC_COM::goodDataLoad()	24	static
+UARTPCCOM.cpp:59:6:void UART_PC_COM::badDataLoad()	16	static
+UARTPCCOM.cpp:63:9:uint8_t UART_PC_COM::isRecieveDataCorrect()	16	static
+UARTPCCOM.cpp:70:15:dataFrameRX* UART_PC_COM::getRecievedData()	16	static
+UARTPCCOM.cpp:74:22:UART_HandleTypeDef* UART_PC_COM::getUartHandler()	16	static
+UARTPCCOM.cpp:78:6:void UART_PC_COM::initFrameTX()	16	static
+UARTPCCOM.cpp:83:6:void UART_PC_COM::updateFrameTX()	40	static
+UARTPCCOM.cpp:89:6:void UART_PC_COM::startSendingData()	16	static
+UARTPCCOM.cpp:93:6:void UART_PC_COM::stopSendingData()	16	static
+UARTPCCOM.cpp:97:6:void UART_PC_COM::startUpdatingData()	16	static
+UARTPCCOM.cpp:101:6:void UART_PC_COM::stopUpdatingData()	16	static

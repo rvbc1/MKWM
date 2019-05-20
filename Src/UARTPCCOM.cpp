@@ -11,8 +11,13 @@ void UART_PC_COM::init(UART_HandleTypeDef *uart_handler, Robot *robot){
 	this->uart_handler = uart_handler;
 
 	this->robot = robot;
+	robot->addPC(this);
+
+	initFrameTX();
+	startUpdatingData();
 
 	HAL_UART_Receive_DMA(uart_handler, frameRX.bytes, DATA_FRAME_RX_SIZE);
+	sendData();
 }
 
 UART_PC_COM::UART_PC_COM(UART_HandleTypeDef *uart_handler, Robot *robot) {
@@ -24,20 +29,16 @@ UART_PC_COM::~UART_PC_COM() {
 }
 
 void UART_PC_COM::sendData(){
-	HAL_UART_Transmit_DMA(uart_handler, frameRX.bytes, DATA_FRAME_RX_SIZE);
-
-
-	//char buffer [20];
-	//HAL_UART_Transmit(uart_handler, (uint8_t*)buffer,
-	//sprintf(buffer, "%d\n%d\n%d\n%d\n", frameTX.data.servo1, frameTX.data.servo2, frameTX.data.servo3, frameTX.data.servo4), HAL_MAX_DELAY);
+	updateFrameTX();
+	HAL_UART_Transmit_DMA(uart_handler, frameTX.bytes, DATA_FRAME_TX_SIZE);
 }
 
 void UART_PC_COM::recieveNextData(){
 	if((frameRX.data.start_code == START_CODE) && (frameRX.data.end_code == END_CODE)){
-		robot->updatedData(this->getRecievedData());
-		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+		goodDataLoad();
 		HAL_UART_Receive_DMA(uart_handler, frameRX.bytes, DATA_FRAME_RX_SIZE);
 	} else {
+		badDataLoad();
 		for(int i = 1; i < DATA_FRAME_RX_SIZE; i++){
 			if(frameRX.bytes[i] == START_CODE){
 				for(int j = 0; j < DATA_FRAME_RX_SIZE - i; j++){
@@ -52,9 +53,15 @@ void UART_PC_COM::recieveNextData(){
 	loop_end:;
 }
 
-uint8_t UART_PC_COM::recieveData(){
+void UART_PC_COM::goodDataLoad(){
+	if(is_updating_data) robot->updatedData(this->getRecievedData()->servo);
+}
+void UART_PC_COM::badDataLoad(){
+
+}
+
+uint8_t UART_PC_COM::isRecieveDataCorrect(){
 	if((frameRX.data.start_code == START_CODE) && (frameRX.data.end_code == END_CODE)){
-		//		sendData();
 		return true;
 	}
 	return false;
@@ -67,4 +74,32 @@ dataFrameRX * UART_PC_COM::getRecievedData(){
 UART_HandleTypeDef * UART_PC_COM::getUartHandler(){
 	return uart_handler;
 }
+
+void UART_PC_COM::initFrameTX(){
+	frameTX.data.start_code = START_CODE;
+	frameTX.data.end_code = END_CODE;
+}
+
+void UART_PC_COM::updateFrameTX(){
+	for(uint16_t i = 0; i < AMOUNT_OF_SERVO; i++){
+		frameTX.data.servo = robot->getCurrentServoData();
+	}
+}
+
+void UART_PC_COM::startSendingData(){
+	is_sending_data = true;
+}
+
+void UART_PC_COM::stopSendingData(){
+	is_sending_data = false;
+}
+
+void UART_PC_COM::startUpdatingData(){
+	is_updating_data = true;
+}
+
+void UART_PC_COM::stopUpdatingData(){
+	is_updating_data = false;
+}
+
 

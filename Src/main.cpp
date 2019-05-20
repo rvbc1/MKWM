@@ -51,6 +51,7 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
+TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim4;
 
 UART_HandleTypeDef huart2;
@@ -63,9 +64,12 @@ DMA_HandleTypeDef hdma_usart3_tx;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 
-Robot *robot;
+Robot *robot = NULL;
 
-UART_PC_COM *pc;
+UART_PC_COM *pc = NULL;
+
+char buffer [50];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -74,25 +78,32 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM4_Init(void);
-static void MX_USART3_UART_Init(void);                                    
+static void MX_USART3_UART_Init(void);
+static void MX_TIM2_Init(void);
+
+//void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 extern "C" void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	if(pc != NULL) pc->recieveNextData();
+}
 
-//	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-
-	pc->recieveNextData();
-
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+	if(pc != NULL) pc->sendData();
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	pc->sendData();// zmień stan diody
+	if(robot != NULL) robot->buttonIT(HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin));
 }
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	if(robot != NULL) robot->timerIT();
+}
+
 
 /* USER CODE END PFP */
 
@@ -133,25 +144,42 @@ int main(void)
 	MX_USART2_UART_Init();
 	MX_TIM4_Init();
 	MX_USART3_UART_Init();
+	MX_TIM2_Init();
 	/* USER CODE BEGIN 2 */
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
 
+
+	//speed_register = &htim2.Instance->ARR;
+	//*speed_register = 5000;
+	//peroid_register = &TIM2->CCMR2;
+
+
+
+	//	  TIM2->CR1 &= ~TIM_CR1_ARPE;
+	//	  TIM2->CR1 |= TIM_AUTORELOAD_PRELOAD_DISABLE;
+	//TIM2->CR1 &= ~TIM_OPMODE_SINGLE;
+
+
+	//TIM2->CNT = 100;
+
+	//HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 
-	robot = new Robot(&TIM4->CCR1, &TIM4->CCR2, &TIM4->CCR3, &TIM4->CCR4);
+	robot = new Robot(&TIM4->CCR1, &TIM4->CCR2, &TIM4->CCR3, &TIM4->CCR4, &htim2);
 	pc = new UART_PC_COM(&huart3, robot);
 
 
 
 
-	while (1)
-	{
+
+	while (1){
 
 		/* USER CODE END WHILE */
 
@@ -209,6 +237,44 @@ void SystemClock_Config(void)
 
 	/* SysTick_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+}
+
+/* TIM2 init function */
+static void MX_TIM2_Init(void)
+{
+
+	TIM_ClockConfigTypeDef sClockSourceConfig;
+	TIM_MasterConfigTypeDef sMasterConfig;
+
+	htim2.Instance = TIM2;
+	htim2.Init.Prescaler = 64000 - 1;
+	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim2.Init.Period = 1000;
+	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+	if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+	{
+		_Error_Handler(__FILE__, __LINE__);
+	}
+
+	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+	if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+	{
+		_Error_Handler(__FILE__, __LINE__);
+	}
+
+	if (HAL_TIM_OnePulse_Init(&htim2, TIM_OPMODE_SINGLE) != HAL_OK)
+	{
+		_Error_Handler(__FILE__, __LINE__);
+	}
+
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+	{
+		_Error_Handler(__FILE__, __LINE__);
+	}
+
 }
 
 /* TIM4 init function */
@@ -362,8 +428,8 @@ static void MX_GPIO_Init(void)
 
 	/*Configure GPIO pin : B1_Pin */
 	GPIO_InitStruct.Pin = B1_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+	GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 	HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
 	/*Configure GPIO pin : LD2_Pin */
