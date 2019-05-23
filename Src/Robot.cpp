@@ -42,9 +42,11 @@ void Robot::init(volatile uint32_t* PWM_0, volatile uint32_t* PWM_1, volatile ui
 
 	current_saved_point = 0;
 	resetSavedPointsMode();
+	resetPCPointsMode();
 	setOnePulseMode(points_timer);
 	HAL_TIM_Base_Start_IT(points_timer);
 	resetTimer(points_timer);
+
 }
 
 Robot::Robot(volatile uint32_t* PWM_0, volatile uint32_t* PWM_1, volatile uint32_t* PWM_2,volatile uint32_t* PWM_3, TIM_HandleTypeDef *points_timer) {
@@ -87,8 +89,28 @@ void Robot::updatedData(servoAngleData servoData){
 	}
 }
 
+void Robot::updatedDataADC(){
+	if(isSavedPointsMode() || isPCPointsMode()){
+		//TURN OFF ADC CONTROL
+	} else {
+		servoAngleData servoData = adc_raw_data;
+		for(unsigned int i = 0; i < AMOUNT_OF_SERVO; i++){
+			servoData.angle[i] /= ADC_DIV;
+		}
+
+		for(unsigned int i = 0; i < AMOUNT_OF_SERVO; i++){
+			servo[i]->setAngle(servoData.angle[i]);
+		}
+		current_angle_servo = servoData;
+	}
+}
+
 servoAngleData Robot::getCurrentServoData(){
 	return current_angle_servo;
+}
+
+servoAngleData * Robot::getRawADCBufferHandler(){
+	return &adc_raw_data;
 }
 
 void Robot::setOnePulseMode(TIM_HandleTypeDef *htim){
@@ -104,12 +126,24 @@ void Robot::resetTimer(TIM_HandleTypeDef *htim){
 	__HAL_TIM_SET_COUNTER(htim, 0);
 }
 
+uint8_t Robot::isPCPointsMode(){
+	return pc_points_mode;
+}
+
+void Robot::setPCPointsMode(){
+	this->pc_points_mode = true;
+}
+
+void Robot::resetPCPointsMode(){
+	this->pc_points_mode = false;
+}
+
 uint8_t Robot::isSavedPointsMode(){
 	return saved_points_mode;
 }
 
 void Robot::setSavedPointsMode(){
-	saved_points_mode = true;
+	this->saved_points_mode = true;
 }
 
 void Robot::resetSavedPointsMode(){

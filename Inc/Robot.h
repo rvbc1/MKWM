@@ -9,13 +9,14 @@
 #define ROBOT_H_
 
 #define AMOUNT_OF_SERVO 4
+#define ADC_DIV 23
 
 
 #include "Servo.h"
 //#include "UARTPCCOM.h"
 #include <vector>
 
-#define TIME_BETWEEN_POINTS 600
+#define TIME_BETWEEN_POINTS 1000
 #define LONG_CLICK_TIME 1000
 
 struct dataFrameRX;
@@ -28,6 +29,7 @@ struct servoAngleData{
 
 class Robot {
 private:
+	uint8_t pc_points_mode;
 	uint8_t saved_points_mode;
 	uint16_t current_saved_point;
 
@@ -37,9 +39,11 @@ private:
 
 	Servo *servo [AMOUNT_OF_SERVO];
 	servoAngleData current_angle_servo;
+	servoAngleData adc_raw_data;
 	std::vector <servoAngleData> saved_points_vector;
 
 	UART_PC_COM *pc;
+	//ADC_HandleTypeDef *adc_handler;
 
 	void setOnePulseMode(TIM_HandleTypeDef *htim);
 	void resetOnePulseMode(TIM_HandleTypeDef *htim);
@@ -60,6 +64,11 @@ public:
 	void moveToSavedPoints();
 	void addPoint(servoAngleData servoData);
 	void updatedData(servoAngleData servoData);
+	void updatedDataADC();
+
+	uint8_t isPCPointsMode();
+	void setPCPointsMode();
+	void resetPCPointsMode();
 
 	uint8_t isSavedPointsMode();
 	void setSavedPointsMode();
@@ -71,6 +80,7 @@ public:
 	void timerIT();
 
 	servoAngleData getCurrentServoData();
+	servoAngleData * getRawADCBufferHandler();
 };
 
 #endif /* ROBOT_H_ */

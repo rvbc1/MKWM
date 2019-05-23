@@ -54,7 +54,11 @@ void UART_PC_COM::recieveNextData(){
 }
 
 void UART_PC_COM::goodDataLoad(){
-	if(is_updating_data) robot->updatedData(this->getRecievedData()->servo);
+	if (getRecievedData()->pc_mode == PC_MODE_ON){
+		robot->setPCPointsMode();
+		if(is_updating_data) robot->updatedData(this->getRecievedData()->servo);
+	}
+	else if (getRecievedData()->pc_mode == PC_MODE_OFF)	robot->resetPCPointsMode();
 }
 void UART_PC_COM::badDataLoad(){
 

@@ -2,25 +2,30 @@ new:146:14:void* operator new(std::size_t, void*)	16	static
 Robot.cpp:11:6:bool operator==(const servoAngleData&, const servoAngleData&)	24	static
 Robot.cpp:18:6:bool operator!=(const servoAngleData&, const servoAngleData&)	24	static
 Robot.cpp:25:6:void Robot::init(volatile uint32_t*, volatile uint32_t*, volatile uint32_t*, volatile uint32_t*, TIM_HandleTypeDef*)	32	static
-Robot.cpp:50:1:Robot::Robot(volatile uint32_t*, volatile uint32_t*, volatile uint32_t*, volatile uint32_t*, TIM_HandleTypeDef*)	32	static
-Robot.cpp:54:1:Robot::~Robot()	16	static
-Robot.cpp:54:1:virtual Robot::~Robot()	16	static
-Robot.cpp:58:6:void Robot::addPC(UART_PC_COM*)	16	static
-Robot.cpp:62:6:void Robot::moveToNextPoint()	24	static
-Robot.cpp:70:6:void Robot::moveToSavedPoints()	16	static
-Robot.cpp:76:6:void Robot::addPoint(servoAngleData)	24	static
-Robot.cpp:83:6:void Robot::updatedData(servoAngleData)	32	static
-Robot.cpp:90:16:servoAngleData Robot::getCurrentServoData()	16	static
-Robot.cpp:94:6:void Robot::setOnePulseMode(TIM_HandleTypeDef*)	16	static
-Robot.cpp:98:6:void Robot::resetOnePulseMode(TIM_HandleTypeDef*)	16	static
-Robot.cpp:102:6:void Robot::resetTimer(TIM_HandleTypeDef*)	16	static
-Robot.cpp:107:9:uint8_t Robot::isSavedPointsMode()	16	static
-Robot.cpp:111:6:void Robot::setSavedPointsMode()	16	static
-Robot.cpp:115:6:void Robot::resetSavedPointsMode()	16	static
-Robot.cpp:119:6:void Robot::shortClick()	24	static
-Robot.cpp:124:6:void Robot::longClick()	16	static
-Robot.cpp:133:6:void Robot::buttonIT(uint8_t)	16	static
-Robot.cpp:144:6:void Robot::timerIT()	24	static
+Robot.cpp:52:1:Robot::Robot(volatile uint32_t*, volatile uint32_t*, volatile uint32_t*, volatile uint32_t*, TIM_HandleTypeDef*)	32	static
+Robot.cpp:56:1:Robot::~Robot()	16	static
+Robot.cpp:56:1:virtual Robot::~Robot()	16	static
+Robot.cpp:60:6:void Robot::addPC(UART_PC_COM*)	16	static
+Robot.cpp:64:6:void Robot::moveToNextPoint()	24	static
+Robot.cpp:72:6:void Robot::moveToSavedPoints()	16	static
+Robot.cpp:78:6:void Robot::addPoint(servoAngleData)	24	static
+Robot.cpp:85:6:void Robot::updatedData(servoAngleData)	32	static
+Robot.cpp:92:6:void Robot::updatedDataADC()	32	static
+Robot.cpp:108:16:servoAngleData Robot::getCurrentServoData()	16	static
+Robot.cpp:112:18:servoAngleData* Robot::getRawADCBufferHandler()	16	static
+Robot.cpp:116:6:void Robot::setOnePulseMode(TIM_HandleTypeDef*)	16	static
+Robot.cpp:120:6:void Robot::resetOnePulseMode(TIM_HandleTypeDef*)	16	static
+Robot.cpp:124:6:void Robot::resetTimer(TIM_HandleTypeDef*)	16	static
+Robot.cpp:129:9:uint8_t Robot::isPCPointsMode()	16	static
+Robot.cpp:133:6:void Robot::setPCPointsMode()	16	static
+Robot.cpp:137:6:void Robot::resetPCPointsMode()	16	static
+Robot.cpp:141:9:uint8_t Robot::isSavedPointsMode()	16	static
+Robot.cpp:145:6:void Robot::setSavedPointsMode()	16	static
+Robot.cpp:149:6:void Robot::resetSavedPointsMode()	16	static
+Robot.cpp:153:6:void Robot::shortClick()	24	static
+Robot.cpp:158:6:void Robot::longClick()	16	static
+Robot.cpp:167:6:void Robot::buttonIT(uint8_t)	16	static
+Robot.cpp:178:6:void Robot::timerIT()	24	static
 stl_vector.h:255:7:std::vector<_Tp, _Alloc>::vector() [with _Tp = servoAngleData; _Alloc = std::allocator<servoAngleData>]	16	static
 stl_vector.h:425:7:std::vector<_Tp, _Alloc>::~vector() [with _Tp = servoAngleData; _Alloc = std::allocator<servoAngleData>]	24	static
 stl_vector.h:780:7:std::vector<_Tp, _Alloc>::reference std::vector<_Tp, _Alloc>::operator[](std::vector<_Tp, _Alloc>::size_type) [with _Tp = servoAngleData; _Alloc = std::allocator<servoAngleData>]	16	static

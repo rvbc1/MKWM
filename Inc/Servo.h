@@ -8,7 +8,7 @@
 #ifndef SERVO_H_
 #define SERVO_H_
 
-#define MIN_PULSE_WIDTH 	650
+#define MIN_PULSE_WIDTH 	800
 #define MAX_PULSE_WIDTH 	2600
 #define DEFAULT_MIN_ANGLE 	0
 #define DEFAULT_MAX_ANGLE 	180

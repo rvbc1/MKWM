@@ -13,13 +13,16 @@
 
 //#define AMOUNTS_OF_SERVO 4
 #define DATA_FRAME_TX_SIZE 10
-#define DATA_FRAME_RX_SIZE 10
+#define DATA_FRAME_RX_SIZE 11
 
 #define START_CODE 0x40
+#define PC_MODE_ON 	0x50
+#define PC_MODE_OFF 0x60
 #define END_CODE 0x80
 
 struct dataFrameRX{
 	uint8_t start_code;
+	uint8_t pc_mode;
 	servoAngleData servo;
 	uint8_t end_code;
 } __attribute__ ((__packed__));
